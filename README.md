@@ -18,7 +18,7 @@
 - [Visualizations](#visualizations)
 - [How to Run](#how-to-run)
 - [Results](#results)
-- [Web App](#web-app)
+- [Frontend](#frontend)
 - [Contact](#contact)
 
 ---
@@ -266,7 +266,7 @@ stages:
 - **Robustness**: Model generalizes well to unseen MRI scans.
 - **Reproducibility**: All experiments are tracked and reproducible via DVC.
 
-## Web App
+## Frontend
 
 <p align="center">
 	<img src="images/website.png" alt="Web App Screenshot" />
