@@ -1,0 +1,52 @@
+stages:
+  data_ingestion:
+    cmd: python3 src/brainTumorMRIClassification/pipeline/stage_01_data_ingestion.py
+    deps:
+      - src/brainTumorMRIClassification/pipeline/stage_01_data_ingestion.py
+      - params.yaml
+    outs:
+      - artifacts/data_ingestion/brain-mri
+
+  prepare_base_model:
+    cmd: python3 src/brainTumorMRIClassification/pipeline/stage_02_prepare_base_model.py
+    deps:
+      - src/brainTumorMRIClassification/pipeline/stage_02_prepare_base_model.py
+      - config/config.yaml
+    params:
+      - IMAGE_SIZE
+      - CLASSES
+      - CLASSES
+      - LEARNING_RATE
+    outs:
+      - artifacts/prepare_base_model
+
+  training:
+    cmd: python3 src/brainTumorMRIClassification/pipeline/stage_03_training.py
+    deps:
+      - src/brainTumorMRIClassification/pipeline/stage_03_training.py
+      - src/brainTumorMRIClassification/components/prepare_callback.py
+      - config/config.yaml
+      - artifacts/data_ingestion/brain-mri
+      - artifacts/prepare_base_model
+    params:
+      - IMAGE_SIZE
+      - EPOCHS
+      - BATCH_SIZE
+      - AUGMENTATION
+      - SEED
+    outs:
+      - artifacts/training/brain_model.h5
+
+  evaluation:
+    cmd: python3 src/brainTumorMRIClassification/pipeline/stage_04_evaluation.py
+    deps:
+      - src/brainTumorMRIClassification/pipeline/stage_04_evaluation.py
+      - config/config.yaml
+      - artifacts/data_ingestion/brain-mri
+      - artifacts/training/brain_model.h5
+    params:
+      - IMAGE_SIZE
+      - BATCH_SIZE
+    metrics:
+      - scores.json:
+          cache: false
